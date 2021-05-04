@@ -1,0 +1,55 @@
+float adc_copy[7];
+float adc_inicial[7];
+
+float aux = 0.0;
+void setup()
+{
+  pinMode(A0, INPUT);
+  Serial.begin(9600);
+}
+float valora;
+float valorV;
+
+void loop()
+{
+  int i, j;
+  valora = analogRead(A0);
+  valorV = (valora*5.0)/1023.0;
+  
+  adc_inicial[6] = adc_inicial[5];
+  adc_inicial[5] = adc_inicial[4];
+  adc_inicial[4] = adc_inicial[3];
+  adc_inicial[3] = adc_inicial[2];
+  adc_inicial[2] = adc_inicial[1];
+  adc_inicial[1] = adc_inicial[0];
+  adc_inicial[0] = valorV;
+
+  adc_copy[6] = adc_inicial[6];
+  adc_copy[5] = adc_inicial[5];
+  adc_copy[4] = adc_inicial[4];
+  adc_copy[3] = adc_inicial[3];
+  adc_copy[2] = adc_inicial[2];
+  adc_copy[1] = adc_inicial[1];
+  adc_copy[0] = adc_inicial[0];
+
+  for (i = 0; i < 7; i++)
+  {
+    for (j = 0; j < 6; j++)
+    {
+      if (adc_copy[j + 1] > adc_copy[j])
+      {
+        aux = adc_copy[j];
+        adc_copy[j] = adc_copy[j + 1];
+        adc_copy[j + 1] = aux;
+      }
+      else
+      {
+        adc_copy[j] = adc_copy[j];
+        adc_copy[j + 1] = adc_copy[j + 1];
+      }
+    }
+  }
+  
+  Serial.println(adc_copy[3],9);
+  delay(10);
+}
